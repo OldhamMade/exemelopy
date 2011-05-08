@@ -1,8 +1,12 @@
 import cgi
-import re
 from uuid import UUID 
 
 from lxml import etree
+
+try:
+    import re2 as re
+except ImportError:
+    import re
 
 class XMLEncoder(object):
 
