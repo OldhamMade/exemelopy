@@ -42,8 +42,8 @@ class BasicSpec(CommonBaseSpec):
 
     def it_should_format_simple_objects(self):
         tests = (
-            (None, '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document/>'),
-            ('test', '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>test</document>'),
+            (None, '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document/>\n'),
+            ('test', '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>test</document>\n'),
             )
 
         self._format_each_should_equal(tests)
@@ -122,7 +122,7 @@ class BasicSpec(CommonBaseSpec):
 
     def it_should_format_special_characters(self):
         tests = (
-            ('< & >', '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>&lt; &amp; &gt;</document>'),
+            ('< & >', '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>&lt; &amp; &gt;</document>\n'),
             )
 
         self._format_each_should_equal(tests)
@@ -150,7 +150,8 @@ long
 
 paragraph
 
-</document>'''),
+</document>
+'''),
             (('''This
 
 is
