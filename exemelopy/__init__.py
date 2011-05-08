@@ -4,6 +4,11 @@ from uuid import UUID
 from lxml import etree
 
 try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
+try:
     import re2 as re
 except ImportError:
     import re

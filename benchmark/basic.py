@@ -30,7 +30,7 @@ class ComplexObject(DictMixin):
 class BasicBenchmark(Benchmark):
 
     def input(self):
-        return [1000]
+        return [100]
 
     def bench_None(self, input):
         for i in xrange(input):
@@ -96,15 +96,25 @@ class BasicBenchmark(Benchmark):
         for i in xrange(input):
             output = XMLEncoder(data).to_string()
 
-    '''
     def bench_Large_Object(self, input):
         data = {}
-        for i in xrange(20):
+        for i in xrange(10):
             data[i] = {}
-            for j in xrange(20):
+            for j in xrange(10):
                 data[i][j] = {
-                    
+                    'a': list(x for x in xrange(50)),
+                    'b': set(x for x in xrange(50)),
+                    'c': tuple(x for x in xrange(50)),
+                    'd': (x for x in xrange(50)),
+                    'e': datetime.datetime.utcnow(),
+                    'f': "Hello World " * 500,
+                    'g': True,
+                    'h': False,
+                    'i': None,
                     }
+
         for i in xrange(input):
             output = XMLEncoder(data).to_string()
+
+    '''
     '''
