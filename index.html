@@ -74,35 +74,35 @@ XML-version of the <a class="reference external" href="http://docs.python.org/li
 <dt id="exemelopy.XMLEncoder">
 <em class="property">class </em><tt class="descclassname">exemelopy.</tt><tt class="descname">XMLEncoder</tt><big>(</big><em>data</em>, <em>doc_el='document'</em>, <em>encoding='UTF-8'</em>, <em>**params</em><big>)</big><a class="headerlink" href="#exemelopy.XMLEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>The main constructor method which accepts the value
-of <cite>data</cite> to be later converted to XML.</p>
-<p>The document element <cite>doc_el</cite> can be changed from the
+of <tt class="docutils literal"><span class="pre">data</span></tt> to be later converted to XML.</p>
+<p>The document element <tt class="docutils literal"><span class="pre">doc_el</span></tt> can be changed from the
 default &#8216;document&#8217; to any valid XML element name.</p>
-<p>The <cite>encoding</cite> defaults to &#8216;UTF-8&#8217;, but can be changed
-to any value accepted by <cite>lxml.etree</cite>.</p>
+<p>The <tt class="docutils literal"><span class="pre">encoding</span></tt> defaults to &#8216;UTF-8&#8217;, but can be changed
+to any value accepted by <tt class="docutils literal"><span class="pre">lxml.etree</span></tt>.</p>
 <p>Any other keyword arguments are passed directly to the
-set-up method of <cite>lxml.etree</cite>.</p>
+set-up method of <tt class="docutils literal"><span class="pre">lxml.etree</span></tt>.</p>
 <dl class="method">
 <dt id="exemelopy.XMLEncoder.from_string">
 <tt class="descname">from_string</tt><big>(</big><em>string</em><big>)</big><a class="headerlink" href="#exemelopy.XMLEncoder.from_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parses a <cite>string</cite> value which replaces the internal <cite>data</cite> value.</p>
+<dd><p>Parses a <tt class="docutils literal"><span class="pre">string</span></tt> value which replaces the internal <tt class="docutils literal"><span class="pre">data</span></tt> value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="exemelopy.XMLEncoder.to_string">
 <tt class="descname">to_string</tt><big>(</big><em>indent=True</em>, <em>declaration=True</em><big>)</big><a class="headerlink" href="#exemelopy.XMLEncoder.to_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encodes the stored <cite>data</cite> to XML and returns a
-<cite>string</cite>.</p>
-<p>Setting <cite>indent</cite> to <cite>False</cite> will forego any pretty-printing
+<dd><p>Encodes the stored <tt class="docutils literal"><span class="pre">data</span></tt> to XML and returns a
+<tt class="docutils literal"><span class="pre">string</span></tt>.</p>
+<p>Setting <tt class="docutils literal"><span class="pre">indent</span></tt> to <tt class="docutils literal"><span class="pre">False</span></tt> will forego any pretty-printing
 and return a condensed value.</p>
-<p>Setting <cite>declaration</cite> to <cite>False</cite> will skip inserting the
+<p>Setting <tt class="docutils literal"><span class="pre">declaration</span></tt> to <tt class="docutils literal"><span class="pre">False</span></tt> will skip inserting the
 XML declaration.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="exemelopy.XMLEncoder.to_xml">
 <tt class="descname">to_xml</tt><big>(</big><big>)</big><a class="headerlink" href="#exemelopy.XMLEncoder.to_xml" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encodes the stored <cite>data</cite> to XML and returns
-an <cite>lxml.etree</cite> value.</p>
+<dd><p>Encodes the stored <tt class="docutils literal"><span class="pre">data</span></tt> to XML and returns
+an <tt class="docutils literal"><span class="pre">lxml.etree</span></tt> value.</p>
 </dd></dl>
 
 </dd></dl>
