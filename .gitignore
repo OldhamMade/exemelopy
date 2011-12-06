@@ -1,9 +1,12 @@
-*.pyc
 .\#*
+*.pyc
 *.svn
+.DS_Store
 .installed.cfg
 Thumbs.db
 bin/*
 develop-eggs/*
 eggs/*
 parts/*
+docs/Makefile
+docs/build/*
