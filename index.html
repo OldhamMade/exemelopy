@@ -47,8 +47,30 @@
             
   <div class="section" id="documentation-for-exemelopy">
 <h1>Documentation for exemelopy<a class="headerlink" href="#documentation-for-exemelopy" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="exemelopy">
+<h2>exemelopy<a class="headerlink" href="#exemelopy" title="Permalink to this headline">¶</a></h2>
+<p>exemelopy aims to be a small, light-weight tool for building an XML
+document from native Python data-types without any intervention; an
+XML-version of the <a class="reference external" href="http://docs.python.org/library/json.html">json</a> and <a class="reference external" href="http://simplejson.readthedocs.org/">simplejson</a> modules.</p>
+<div class="section" id="usage">
+<h3>USAGE<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">exemelopy</span> <span class="kn">import</span> <span class="n">XMLEncoder</span>
+<span class="n">xml</span> <span class="o">=</span> <span class="n">XMLEncoder</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;spam&#39;</span><span class="p">:</span> <span class="s">&#39;eggs&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">xml</span>
+</pre></div>
+</div>
+<p>Which will return the following output:</p>
+<div class="highlight-python"><pre> &lt;?xml version='1.0' encoding='UTF-8'?&gt;
+ &lt;document&gt;
+   &lt;a&gt;1&lt;/a&gt;
+   &lt;b nodetype="boolean"&gt;true&lt;/b&gt;
+   &lt;spam&gt;eggs&lt;/spam&gt;
+&lt;/document&gt;</pre>
+</div>
+</div>
 <div class="section" id="module-exemelopy">
-<span id="module-contents"></span><h2>Module Contents:<a class="headerlink" href="#module-exemelopy" title="Permalink to this headline">¶</a></h2>
+<span id="module-contents"></span><h3>Module Contents:<a class="headerlink" href="#module-exemelopy" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 </div>
 
@@ -61,7 +83,11 @@
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Documentation for exemelopy</a><ul>
+<li><a class="reference internal" href="#exemelopy">exemelopy</a><ul>
+<li><a class="reference internal" href="#usage">USAGE</a></li>
 <li><a class="reference internal" href="#module-exemelopy">Module Contents:</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
