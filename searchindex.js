@@ -1,1 +1,1 @@
-Search.setIndex({objects:{},terms:{index:0,search:0,welcom:0,exemelopi:0,modul:0,indic:0,content:0,tabl:0,document:0,page:0},objtypes:{},titles:["Welcome to exemelopy&#8217;s documentation!"],objnames:{},filenames:["index"]})
+Search.setIndex({objects:{"":{exemelopy:[0,0,1,""]}},terms:{index:[],search:[],welcom:[],exemelopi:0,modul:0,indic:[],content:0,tabl:[],document:0,page:[]},objtypes:{"0":"py:module"},titles:["Documentation for exemelopy"],objnames:{"0":["py","module","Python module"]},filenames:["index"]})
