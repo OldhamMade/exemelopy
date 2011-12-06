@@ -55,7 +55,7 @@ class BasicSpec(CommonBaseSpec):
             )
 
         self._format_each_should_equal(tests)
-    
+
 
     def it_should_format_sets(self):
         tests = (
@@ -63,7 +63,7 @@ class BasicSpec(CommonBaseSpec):
             )
 
         self._format_each_should_equal(tests)
-    
+
 
     def it_should_format_tuples(self):
         tests = (
@@ -71,7 +71,7 @@ class BasicSpec(CommonBaseSpec):
             )
 
         self._format_each_should_equal(tests)
-    
+
 
     def it_should_format_generator_objects(self):
         tests = (
@@ -79,7 +79,7 @@ class BasicSpec(CommonBaseSpec):
             )
 
         self._format_each_should_equal(tests)
-    
+
 
     def it_should_format_nested_unicode_dicts(self):
         tests = (
@@ -197,7 +197,7 @@ paragraph
         foo = PlainObject()
         foo.bar = 'baz'
         foo.nested = nesteddict
-        
+
         tests = (
             ((1,2,3), '''<?xml version=\'1.0\' encoding=\'UTF-8\'?>
 <document nodetype="fixed-list">
