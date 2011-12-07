@@ -4,6 +4,8 @@
 .DS_Store
 .installed.cfg
 Thumbs.db
+dist/*
+exemelopy.egg-info/*
 bin/*
 develop-eggs/*
 eggs/*
