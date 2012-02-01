@@ -1,12 +1,12 @@
-=========
 exemelopy
 =========
 
-exemelopy aims to be a small, light-weight tool for building an XML 
+exemelopy aims to be an easy-to-use tool for building an XML 
 document from native Python data-types without any intervention; an 
 XML-version of the json_ and simplejson_ modules.
 
------
+This package depends on lxml_ to create valid XML output.
+
 USAGE
 -----
 
@@ -27,3 +27,4 @@ Which will return the following output::
 
 .. _simplejson: http://simplejson.readthedocs.org/
 .. _json: http://docs.python.org/library/json.html
+.. _lxml: http://lxml.de/
