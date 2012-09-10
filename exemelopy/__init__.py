@@ -104,14 +104,11 @@ class XMLEncoder(object):
             for name, items in data.iteritems():
                 if isinstance(name, basestring) and name and str(name[0]) is '?':
                     #  processing instruction
-                    #self._add_processing_instruction(node, items)
-                    pass
+                    self._add_processing_instruction(node, items)
 
                 elif isinstance(name, basestring) and name and str(name[0]) is '!':
                     # doctype
-                    #self._add_docype(node, items)
-                    pass
-
+                    self._add_doctype(node, items)
 
                 elif isinstance(name, basestring) and name and not name[0].isalpha():
                     child = etree.SubElement(node, u'node', name=unicode(name))
@@ -139,17 +136,17 @@ class XMLEncoder(object):
                     item)
 
 
-        elif hasattr(data, 'send'):
-            # generator
-            node.set('nodetype',u'generated-list')
+        elif isinstance(data, tuple):
+            node.set('nodetype',u'fixed-list')
             for item in data:
                 self._update_document(
                     etree.SubElement(node, u'i'),
                     item)
 
 
-        elif isinstance(data, tuple):
-            node.set('nodetype',u'fixed-list')
+        elif hasattr(data, 'send'):
+            # generator
+            node.set('nodetype',u'generated-list')
             for item in data:
                 self._update_document(
                     etree.SubElement(node, u'i'),
@@ -189,7 +186,7 @@ class XMLEncoder(object):
 
 
         else:
-            raise Exception('self._update_document: unsupported type "%s"' % type(data))
+            raise Exception('unsupported type "%s" when creating XML' % type(data))
 
         return node
 
@@ -206,6 +203,7 @@ class XMLEncoder(object):
 
 
     def _add_processing_instruction(self, node, data):
+        raise NotImplemented('creating processing instructions has not been implemented')
 
         self.document = etree.ElementTree(self.document)
 
@@ -218,15 +216,15 @@ class XMLEncoder(object):
                 if name[0].isalpha() and type(value) is not dict
                 ))
 
-        #pi = etree.ProcessingInstruction(node[1:])#, ' '.join(attrs))
-        pi = etree.ProcessingInstruction(
-            'xml-stylesheet',
-            'type="text/xml" href="default.xsl"'
-            )
+        pi = etree.ProcessingInstruction(node[1:])#, ' '.join(attrs))
 
 
     def __dict_to_attrs(self, d):
         return ('%s="%s"' % (name, value) for name, value in d.iteritems())
+
+
+    def _add_doctype(self, *args, **kwargs):
+        raise NotImplemented('creating doctype declarations has not been implemented')
 
 
     def __escape(self, data):
