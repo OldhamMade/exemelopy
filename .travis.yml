@@ -8,6 +8,9 @@ branches:
   only:
     - master
 
+before_install:
+  - git submodule update --init --recursive --quiet
+
 install:
   - python bootstrap.py 
   - bin/buildout

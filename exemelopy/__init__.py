@@ -29,6 +29,9 @@ class XMLEncoder(object):
     The ``encoding`` defaults to 'UTF-8', but can be changed
     to any value accepted by ``lxml.etree``.
 
+    Setting ``strict_errors`` to ``True`` will cause a ``TypeError``
+    to be raised for unsupported types.
+
     Any other keyword arguments are passed directly to the
     set-up method of ``lxml.etree``.
     """
