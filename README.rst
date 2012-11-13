@@ -2,8 +2,8 @@ exemelopy
 =========
 
 exemelopy aims to be an easy-to-use tool for building an XML 
-document from native Python data-types without any intervention; an 
-XML-version of the json_ and simplejson_ modules.
+document from native Python data-types without any intervention;
+akin to the json_ and simplejson_ modules, but for XML.
 
 This package depends on lxml_ to create valid XML output.
 

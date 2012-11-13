@@ -5,9 +5,12 @@ from uuid import UUID
 from lxml import etree
 
 try:
-    from cStringIO import StringIO
+    from io import BytesIO  # python 3
 except ImportError:
-    from StringIO import StringIO
+    try:
+        from cStringIO import StringIO as BytesIO
+    except ImportError:
+        from StringIO import StringIO as BytesIO
 
 
 class XMLEncoder(object):
@@ -60,7 +63,7 @@ class XMLEncoder(object):
 
     def from_string(self, string):
         """Parses a ``string`` value which replaces the internal ``data`` value."""
-        self.document = etree.parse(StringIO(string))
+        self.document = etree.parse(BytesIO(string))
 
 
     def _update_document(self, node, data):
@@ -98,6 +101,9 @@ class XMLEncoder(object):
 
         elif self._is_scalar(data):
             node.text = self._to_unicode(data)
+
+        elif isinstance(data, BytesIO):
+            node.text = self._to_unicode(data.getvalue())
 
         elif hasattr(data, 'iteritems'):
             #node.set('nodetype',u'map')
@@ -246,4 +252,3 @@ class XMLEncoder(object):
     def __unicodeToHTMLEntities(self, text):
         """Converts unicode to HTML entities.  For example '&' becomes '&amp;'."""
         return cgi.escape(text).encode('ascii', 'xmlcharrefreplace')
-

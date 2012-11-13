@@ -5,6 +5,11 @@ import re
 import sys
 import unittest
 
+try:
+    from io import BytesIO  # python 3
+except ImportError:
+    from cStringIO import StringIO as BytesIO  # python 2
+
 BASE_PATH = '/'.join(os.path.dirname(os.path.abspath(__file__)).split('/')[0:-1])
 
 if BASE_PATH not in sys.path:
@@ -271,3 +276,10 @@ paragraph
 
         self._format_each_should_equal(tests)
 
+    def it_should_format_io_objects(self):
+        tests = (
+            ({'data': BytesIO('this is some data')},
+             "<?xml version='1.0' encoding='UTF-8'?>\n<document>\n  <data>this is some data</data>\n</document>\n"),
+            )
+
+        self._format_each_should_equal(tests)
