@@ -1,5 +1,6 @@
 exemelopy
 =========
+|travis_status|_
 
 exemelopy aims to be an easy-to-use tool for building an XML 
 document from native Python data-types without any intervention;
@@ -28,4 +29,5 @@ Which will return the following output::
 .. _simplejson: http://simplejson.readthedocs.org/
 .. _json: http://docs.python.org/library/json.html
 .. _lxml: http://lxml.de/
-
+.. |travis_status| image:: https://secure.travis-ci.org/unpluggd/exemelopy.png
+.. _travis_status: https://secure.travis-ci.org/unpluggd/exemelopy
