@@ -3,6 +3,7 @@ import datetime
 import os
 import re
 import sys
+import tempfile
 import unittest
 
 try:
@@ -15,7 +16,7 @@ BASE_PATH = '/'.join(os.path.dirname(os.path.abspath(__file__)).split('/')[0:-1]
 if BASE_PATH not in sys.path:
     sys.path.insert(1, BASE_PATH)
 
-from exemelopy import XMLEncoder
+from exemelopy import *
 
 class PlainObject(object):
     pass
@@ -36,16 +37,16 @@ class ComplexObject(DictMixin):
 
 
 class CommonBaseSpec(unittest.TestCase):
-    def _format_each_should_equal(self, items):
+    def _format_each_should_equal(self, items, skip_errors=False):
         for test, expected in items:
-            output = XMLEncoder(test).to_string()
+            output = XMLEncoder(test, skip_errors=skip_errors).to_string()
             self.assertEqual(output, expected)
 
 
 
 class BasicSpec(CommonBaseSpec):
 
-    def it_should_format_simple_objects(self):
+    def it_should_format_simple_items(self):
         tests = (
             (None, '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document/>\n'),
             ('test', '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>test</document>\n'),
@@ -73,14 +74,6 @@ class BasicSpec(CommonBaseSpec):
     def it_should_format_tuples(self):
         tests = (
             ((1,2,3), '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document nodetype="fixed-list">\n  <i>1</i>\n  <i>2</i>\n  <i>3</i>\n</document>\n'),
-            )
-
-        self._format_each_should_equal(tests)
-
-
-    def it_should_format_generator_objects(self):
-        tests = (
-            ((i for i in xrange(1,4)), '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document nodetype="generated-list">\n  <i>1</i>\n  <i>2</i>\n  <i>3</i>\n</document>\n'),
             )
 
         self._format_each_should_equal(tests)
@@ -187,6 +180,17 @@ paragraph
         self._format_each_should_equal(tests)
 
 
+
+class ObjectSpec(CommonBaseSpec):
+
+    def it_should_format_generator_objects(self):
+        tests = (
+            ((i for i in xrange(1,4)), '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document nodetype="generated-list">\n  <i>1</i>\n  <i>2</i>\n  <i>3</i>\n</document>\n'),
+            )
+
+        self._format_each_should_equal(tests)
+
+
     def it_should_format_complex_objects(self):
 
         nesteddict = {
@@ -276,6 +280,7 @@ paragraph
 
         self._format_each_should_equal(tests)
 
+
     def it_should_format_io_objects(self):
         tests = (
             ({'data': BytesIO('this is some data')},
@@ -283,3 +288,23 @@ paragraph
             )
 
         self._format_each_should_equal(tests)
+
+
+
+class UnsupportedFormatSpec(CommonBaseSpec):
+
+    def it_should_raise_for_unsupported_formats(self):
+        data = {
+            'file': tempfile.TemporaryFile()
+            }
+
+        self.assertRaises(TypeError, XMLEncoder(data).to_string)
+
+    def it_should_not_raise_on_skip_errors(self):
+        """it should not raise on skip_errors"""
+        tests = (
+            ({'file': tempfile.TemporaryFile()},
+             '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>\n  <file nodetype="unsupported-type">&lt;type \'file\'&gt;</file>\n</document>\n'),
+            )
+
+        self._format_each_should_equal(tests, skip_errors=True)

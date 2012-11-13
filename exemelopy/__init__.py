@@ -13,6 +13,12 @@ except ImportError:
         from StringIO import StringIO as BytesIO
 
 
+__all__ = (
+    'XMLEncoder',
+    )
+
+
+
 class XMLEncoder(object):
     """The main constructor method which accepts the value
     of ``data`` to be later converted to XML.
@@ -29,10 +35,11 @@ class XMLEncoder(object):
 
     _is_uuid = re.compile(r'^\{?([0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12})\}?$', re.I)
 
-    def __init__(self, data, doc_el='document', encoding='UTF-8', **params):
+    def __init__(self, data, doc_el='document', encoding='UTF-8', skip_errors=False, **params):
         self.data = data
         self.document = etree.Element(doc_el, **params)
         self.encoding = encoding
+        self.skip_errors = skip_errors
 
 
     def to_string(self, indent=True, declaration=True):
@@ -176,23 +183,35 @@ class XMLEncoder(object):
 
 
         elif isinstance(data, object):
-            children = ((n, v)
-                        for n, v in data.__dict__.iteritems()
-                        if n[0] is not '_' and not hasattr(n, '__call__'))
+            try:
+                children = ((n, v)
+                            for n, v in data.__dict__.iteritems()
+                            if n[0] is not '_' and not hasattr(n, '__call__'))
 
 
-            sub = etree.SubElement(node,
-                                   unicode(data.__class__.__name__),
-                                   nodetype="container")
+                sub = etree.SubElement(node,
+                                       unicode(data.__class__.__name__),
+                                       nodetype="container")
 
-            for item, value in children:
-                self._update_document(
-                    etree.SubElement(sub, unicode(item)),
-                    value)
+                for item, value in children:
+                    self._update_document(
+                        etree.SubElement(sub, unicode(item)),
+                        value)
+
+            except AttributeError as e:
+                if not self.skip_errors:
+                    raise TypeError('%s is not XML serializable' % type(data))
+
+                node.set('nodetype', u'unsupported-type')
+                node.text = self._to_unicode(type(data))
 
 
         else:
-            raise Exception('unsupported type "%s" when creating XML' % type(data))
+            if not self.skip_errors:
+                raise TypeError('%s is not XML serializable' % type(data))
+
+            node.set('nodetype', u'unsupported-type')
+            node.text = self._to_unicode(type(data))
 
         return node
 
