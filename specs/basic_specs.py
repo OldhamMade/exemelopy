@@ -39,7 +39,7 @@ class ComplexObject(DictMixin):
 class CommonBaseSpec(unittest.TestCase):
     def _format_each_should_equal(self, items, skip_errors=False):
         for test, expected in items:
-            output = XMLEncoder(test, skip_errors=skip_errors).to_string()
+            output = XMLEncoder(test).to_string()
             self.assertEqual(output, expected)
 
 
@@ -298,13 +298,13 @@ class UnsupportedFormatSpec(CommonBaseSpec):
             'file': tempfile.TemporaryFile()
             }
 
-        self.assertRaises(TypeError, XMLEncoder(data).to_string)
+        self.assertRaises(TypeError, XMLEncoder(data, strict_errors=True).to_string)
 
-    def it_should_not_raise_on_skip_errors(self):
+    def it_should_skip_errors(self):
         """it should not raise on skip_errors"""
         tests = (
             ({'file': tempfile.TemporaryFile()},
              '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>\n  <file nodetype="unsupported-type">&lt;type \'file\'&gt;</file>\n</document>\n'),
             )
 
-        self._format_each_should_equal(tests, skip_errors=True)
+        self._format_each_should_equal(tests)

@@ -35,11 +35,11 @@ class XMLEncoder(object):
 
     _is_uuid = re.compile(r'^\{?([0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12})\}?$', re.I)
 
-    def __init__(self, data, doc_el='document', encoding='UTF-8', skip_errors=False, **params):
+    def __init__(self, data, doc_el='document', encoding='UTF-8', strict_errors=False, **params):
         self.data = data
         self.document = etree.Element(doc_el, **params)
         self.encoding = encoding
-        self.skip_errors = skip_errors
+        self.strict_errors = strict_errors
 
 
     def to_string(self, indent=True, declaration=True):
@@ -199,7 +199,7 @@ class XMLEncoder(object):
                         value)
 
             except AttributeError as e:
-                if not self.skip_errors:
+                if self.strict_errors:
                     raise TypeError('%s is not XML serializable' % type(data))
 
                 node.set('nodetype', u'unsupported-type')
@@ -207,7 +207,7 @@ class XMLEncoder(object):
 
 
         else:
-            if not self.skip_errors:
+            if self.strict_errors:
                 raise TypeError('%s is not XML serializable' % type(data))
 
             node.set('nodetype', u'unsupported-type')
