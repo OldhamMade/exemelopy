@@ -207,6 +207,10 @@ class ObjectSpec(CommonBaseSpec):
         foo.bar = 'baz'
         foo.nested = nesteddict
 
+        titles = {
+            'long title': 'some text',
+        }
+
         tests = (
             ((1,2,3), '''<?xml version=\'1.0\' encoding=\'UTF-8\'?>
 <document nodetype="fixed-list">
@@ -274,6 +278,12 @@ class ObjectSpec(CommonBaseSpec):
       <bar nodetype="boolean">false</bar>
     </nested>
   </PlainObject>
+</document>
+'''),
+            (titles,
+             '''<?xml version=\'1.0\' encoding=\'UTF-8\'?>
+<document>
+  <node name="long title">some text</node>
 </document>
 '''),
             )

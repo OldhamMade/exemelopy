@@ -116,23 +116,24 @@ class XMLEncoder(object):
             node.text = self._to_unicode(data.getvalue())
 
         elif hasattr(data, 'iteritems'):
-            #node.set('nodetype',u'map')
             for name, items in data.iteritems():
-                if isinstance(name, basestring) and name and str(name[0]) is '?':
-                    #  processing instruction
-                    self._add_processing_instruction(node, items)
+                try:
+                    if isinstance(name, basestring) and name and str(name[0]) is '?':
+                        #  processing instruction
+                        self._add_processing_instruction(node, items)
 
-                elif isinstance(name, basestring) and name and str(name[0]) is '!':
-                    # doctype
-                    self._add_doctype(node, items)
+                    elif isinstance(name, basestring) and name and str(name[0]) is '!':
+                        # doctype
+                        self._add_doctype(node, items)
 
-                elif isinstance(name, basestring) and name and not name[0].isalpha():
-                    child = etree.SubElement(node, u'node', name=unicode(name))
+                    elif isinstance(name, basestring) and name and not name[0].isalpha():
+                        child = etree.SubElement(node, u'node', name=unicode(name))
 
-                elif isinstance(name, basestring) and name:
-                    child = etree.SubElement(node, unicode(name))
+                    elif isinstance(name, basestring) and name:
+                        child = etree.SubElement(node, unicode(name))
 
-                else:
+                except ValueError:
+                    # node name is invalid, use <node name="{name}">
                     child = etree.SubElement(node, u"node", name=unicode(name))
 
                 child = self._update_document(child, items)
