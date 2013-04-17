@@ -47,30 +47,14 @@ parser.add_option("-t", "--accept-buildout-test-releases",
                         "extensions for you.  If you use this flag, "
                         "bootstrap and buildout will get the newest releases "
                         "even if they are alphas or betas."))
-parser.add_option("-c", None, action="store", dest="config_file",
+parser.add_option("-c", "--config-file",
                    help=("Specify the path to the buildout configuration "
                          "file to be used."))
+parser.add_option("-f", "--find-links",
+                   help=("Specify a URL to search for buildout releases"))
+
 
 options, args = parser.parse_args()
-
-######################################################################
-# handle -S
-
-def normpath(p):
-    if p.endswith(os.path.sep):
-        return p[:-1]
-    else:
-        return p
-
-nosite = 'site' not in sys.modules
-if nosite:
-    # They've asked not to import site.  Cool, but distribute is going to
-    # import it anyway, so we're going to have to clean up. :(
-    initial_paths = set(map(normpath, sys.path))
-    import site
-    to_remove = set(map(normpath, sys.path)) - initial_paths
-else:
-    to_remove = ()
 
 ######################################################################
 # load/install distribute
@@ -102,13 +86,6 @@ except ImportError:
         if path not in pkg_resources.working_set.entries:
             pkg_resources.working_set.add_entry(path)
 
-# Clean up
-if nosite and 'site' in sys.modules:
-    del sys.modules['site']
-    sys.path[:] = [p for p in sys.path[:]
-        if normpath(p) not in to_remove
-        ]
-
 ######################################################################
 # Install buildout
 
@@ -118,13 +95,17 @@ cmd = [sys.executable, '-c',
        'from setuptools.command.easy_install import main; main()',
        '-mZqNxd', tmpeggs]
 
-find_links = os.environ.get('bootstrap-testing-find-links')
+find_links = os.environ.get(
+    'bootstrap-testing-find-links',
+    options.find_links or
+    ('http://downloads.buildout.org/'
+     if options.accept_buildout_test_releases else None)
+    )
 if find_links:
     cmd.extend(['-f', find_links])
 
 distribute_path = ws.find(
     pkg_resources.Requirement.parse('distribute')).location
-env = dict(os.environ, PYTHONPATH=distribute_path)
 
 requirement = 'zc.buildout'
 version = options.version
@@ -161,7 +142,7 @@ if version:
 cmd.append(requirement)
 
 import subprocess
-if subprocess.call(cmd, env=env) != 0:
+if subprocess.call(cmd, env=dict(os.environ, PYTHONPATH=distribute_path)) != 0:
     raise Exception(
         "Failed to execute command:\n%s",
         repr(cmd)[1:-1])
@@ -173,12 +154,8 @@ ws.add_entry(tmpeggs)
 ws.require(requirement)
 import zc.buildout.buildout
 
-if not args:
-    # Note that if there are args, they may be for another command, say, init.
-    args = ['bootstrap']
-
-if options.accept_buildout_test_releases:
-    args.append('buildout:accept-buildout-test-releases=true')
+if not [a for a in args if '=' not in a]:
+    args.append('bootstrap')
 
 # if -c was provided, we push it back into args for buildout' main function
 if options.config_file is not None:
