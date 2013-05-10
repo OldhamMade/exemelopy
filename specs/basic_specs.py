@@ -71,6 +71,16 @@ class BasicSpec(CommonBaseSpec):
         self._format_each_should_equal(tests)
 
 
+    def it_should_format_integer_keys(self):
+        tests = (({
+            1: 1,
+            2: 2,
+            3: 3,
+            }, '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>\n  <node name="1">1</node>\n  <node name="2">2</node>\n  <node name="3">3</node>\n</document>\n'),)
+
+        self._format_each_should_equal(tests)
+
+
     def it_should_format_tuples(self):
         tests = (
             ((1,2,3), '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document nodetype="fixed-list">\n  <i>1</i>\n  <i>2</i>\n  <i>3</i>\n</document>\n'),

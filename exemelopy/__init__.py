@@ -132,6 +132,10 @@ class XMLEncoder(object):
                     elif isinstance(name, basestring) and name:
                         child = etree.SubElement(node, unicode(name))
 
+                    else:
+                        # node name is invalid, use <node name="{name}">
+                        child = etree.SubElement(node, u"node", name=unicode(name))
+
                 except ValueError:
                     # node name is invalid, use <node name="{name}">
                     child = etree.SubElement(node, u"node", name=unicode(name))
