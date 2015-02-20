@@ -91,9 +91,9 @@ class XMLEncoder(object):
             node.set('nodetype', u'boolean')
             node.text = u"false"
 
-        elif isinstance(data, basestring) and \
-            len(data) in (36, 38) and \
-            self._is_uuid.match(data):
+        elif (isinstance(data, basestring)
+              and len(data) in (36, 38)
+              and self._is_uuid.match(data)):
 
             try:
                 UUID(data)
@@ -120,18 +120,21 @@ class XMLEncoder(object):
         elif hasattr(data, 'iteritems'):
             for name, items in data.iteritems():
                 try:
-                    if isinstance(name, basestring) \
-                       and name and str(name[0]) is '?':
+                    if (isinstance(name, basestring)
+                        and name
+                        and str(name[0]) is '?'):
                         #  processing instruction
                         self._add_processing_instruction(node, items)
 
-                    elif isinstance(name, basestring) \
-                         and name and str(name[0]) is '!':
+                    elif (isinstance(name, basestring)
+                          and name
+                          and str(name[0]) is '!'):
                         # doctype
                         self._add_doctype(node, items)
 
-                    elif isinstance(name, basestring) \
-                         and name and not name[0].isalpha():
+                    elif (isinstance(name, basestring)
+                          and name
+                          and not name[0].isalpha()):
                         child = etree.SubElement(node, u'node',
                                                  name=unicode(name))
 
@@ -178,8 +181,8 @@ class XMLEncoder(object):
                     etree.SubElement(node, u'i'),
                     item)
 
-        elif isinstance(data, object) \
-            and hasattr(data, '__slots__'):
+        elif (isinstance(data, object)
+              and hasattr(data, '__slots__')):
             children = ((n, getattr(data, n))
                         for n in data.__slots__
                         if n[0] is not '_' and not hasattr(n, '__call__'))
@@ -198,7 +201,6 @@ class XMLEncoder(object):
                 children = ((n, v)
                             for n, v in data.__dict__.iteritems()
                             if n[0] is not '_' and not hasattr(n, '__call__'))
-
 
                 sub = etree.SubElement(node,
                                        unicode(data.__class__.__name__),
