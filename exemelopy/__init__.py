@@ -240,7 +240,7 @@ class XMLEncoder(object):
             'has not been implemented'
         )
 
-    def _add_doctype(self):
+    def _add_doctype(self, item):
         raise NotImplementedError(
             'creating doctype declarations '
             'has not been implemented'

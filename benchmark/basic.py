@@ -47,71 +47,71 @@ class BasicBenchmark(Benchmark):
     def input(self):
         return [100]
 
-    def bench_None(self, input):
-        for i in xrange(input):
+    def bench_None(self, input_):
+        for i in xrange(input_):
             XMLEncoder(None).to_string()
 
-    def bench_Basic_Integer(self, input):
-        for i in xrange(input):
+    def bench_Basic_Integer(self, input_):
+        for i in xrange(input_):
             XMLEncoder(123).to_string()
 
-    def bench_Basic_Float(self, input):
-        for i in xrange(input):
+    def bench_Basic_Float(self, input_):
+        for i in xrange(input_):
             XMLEncoder(1.23).to_string()
 
-    def bench_Basic_String(self, input):
-        for i in xrange(input):
+    def bench_Basic_String(self, input_):
+        for i in xrange(input_):
             XMLEncoder('simple string').to_string()
 
-    def bench_Basic_List(self, input):
-        for i in xrange(input):
+    def bench_Basic_List(self, input_):
+        for i in xrange(input_):
             XMLEncoder([1, 2, 3, 4, 5]).to_string()
 
-    def bench_Basic_Set(self, input):
-        for i in xrange(input):
+    def bench_Basic_Set(self, input_):
+        for i in xrange(input_):
             XMLEncoder(set([1, 2, 3, 4, 5])).to_string()
 
-    def bench_Basic_Tuple(self, input):
-        for i in xrange(input):
+    def bench_Basic_Tuple(self, input_):
+        for i in xrange(input_):
             XMLEncoder((1, 2, 3, 4, 5)).to_string()
 
-    def bench_Basic_Generator(self, input):
+    def bench_Basic_Generator(self, input_):
         data = (i for i in xrange(10))
-        for i in xrange(input):
+        for i in xrange(input_):
             XMLEncoder(data).to_string()
 
-    def bench_Empty_Dict(self, input):
-        for i in xrange(input):
+    def bench_Empty_Dict(self, input_):
+        for i in xrange(input_):
             XMLEncoder({}).to_string()
 
-    def bench_Basic_Dict(self, input):
-        for i in xrange(input):
+    def bench_Basic_Dict(self, input_):
+        for i in xrange(input_):
             XMLEncoder({'a': 1}).to_string()
 
-    def bench_True(self, input):
-        for i in xrange(input):
+    def bench_True(self, input_):
+        for i in xrange(input_):
             XMLEncoder(True).to_string()
 
-    def bench_False(self, input):
-        for i in xrange(input):
+    def bench_False(self, input_):
+        for i in xrange(input_):
             XMLEncoder(False).to_string()
 
-    def bench_Simple_Object(self, input):
+    def bench_Simple_Object(self, input_):
         data = SimpleObject()
-        for i in xrange(input):
+        for i in xrange(input_):
             XMLEncoder(data).to_string()
 
-    def bench_Complex_Object(self, input):
+    def bench_Complex_Object(self, input_):
         data = ComplexObject()
-        for i in xrange(input):
+        for i in xrange(input_):
             XMLEncoder(data).to_string()
 
-    def bench_Date_Object(self, input):
+    def bench_Date_Object(self, input_):
         data = datetime.datetime(2010, 2, 1, 0, 0)
-        for i in xrange(input):
+        for i in xrange(input_):
             XMLEncoder(data).to_string()
 
-    def bench_Large_Object(self, input):
+    def bench_Large_Object(self, input_):
         data = {}
         for i in xrange(10):
             data[i] = {}
@@ -128,5 +128,5 @@ class BasicBenchmark(Benchmark):
                     'i': None,
                     }
 
-        for i in xrange(input):
+        for i in xrange(input_):
             XMLEncoder(data).to_string()
