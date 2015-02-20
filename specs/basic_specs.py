@@ -1,7 +1,6 @@
 from collections import MutableMapping as DictMixin
 import datetime
 import os
-import re
 import sys
 import tempfile
 import unittest
@@ -11,29 +10,42 @@ try:
 except ImportError:
     from cStringIO import StringIO as BytesIO  # python 2
 
-BASE_PATH = '/'.join(os.path.dirname(os.path.abspath(__file__)).split('/')[0:-1])
+BASE_PATH = '/'.join(os.path.dirname(
+    os.path.abspath(__file__)).split('/')[0:-1])
 
 if BASE_PATH not in sys.path:
     sys.path.insert(1, BASE_PATH)
 
 from exemelopy import *
 
+
 class PlainObject(object):
     pass
 
+
 class ComplexObject(DictMixin):
-    def __init__(self): self.dict = dict()
-    def __delitem__(self, key): del self.dict[key]
-    def __getitem__(self, key): return self.get(key, KeyError)
-    def __iter__(self): return iter(self.dict)
-    def __len__(self): return len(self.dict)
-    def __setitem__(self, key, value): self.append(key, value)
+    def __init__(self):
+        self.dict = dict()
+
+    def __delitem__(self, key):
+        del self.dict[key]
+
+    def __getitem__(self, key):
+        return self.get(key, KeyError)
+
+    def __iter__(self):
+        return iter(self.dict)
+
+    def __len__(self):
+        return len(self.dict)
+
+    def __setitem__(self, key, value):
+        self.append(key, value)
 
     def get(self, key, default=None):
         if key not in self.dict:
             return default
         return self.dict[key]
-
 
 
 class CommonBaseSpec(unittest.TestCase):
@@ -43,57 +55,63 @@ class CommonBaseSpec(unittest.TestCase):
             self.assertEqual(output, expected)
 
 
-
 class BasicSpec(CommonBaseSpec):
 
     def it_should_format_simple_items(self):
         tests = (
-            (None, '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document/>\n'),
-            ('test', '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>test</document>\n'),
+            (None, "<?xml version='1.0' encoding='UTF-8'?>\n<document/>\n"),
+            ('test', '<?xml version=\'1.0\' encoding=\'UTF-8\'?>'
+             '\n<document>test</document>\n'),
             )
 
         self._format_each_should_equal(tests)
-
 
     def it_should_format_lists(self):
         tests = (
-            ([1,2,3], '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document nodetype="list">\n  <i>1</i>\n  <i>2</i>\n  <i>3</i>\n</document>\n'),
+            ([1, 2, 3], '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n'
+             '<document nodetype="list">\n  <i>1</i>\n  <i>2</i>\n  '
+             '<i>3</i>\n</document>\n'),
             )
 
         self._format_each_should_equal(tests)
-
 
     def it_should_format_sets(self):
         tests = (
-            (set([1,2,3]), '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document nodetype="unique-list">\n  <i>1</i>\n  <i>2</i>\n  <i>3</i>\n</document>\n'),
+            (set([1, 2, 3]), '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n'
+             '<document nodetype="unique-list">\n  <i>1</i>\n  <i>2</i>\n  '
+             '<i>3</i>\n</document>\n'),
             )
 
         self._format_each_should_equal(tests)
-
 
     def it_should_format_integer_keys(self):
         tests = (({
             1: 1,
             2: 2,
             3: 3,
-            }, '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>\n  <node name="1">1</node>\n  <node name="2">2</node>\n  <node name="3">3</node>\n</document>\n'),)
+            }, '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>\n  '
+            '<node name="1">1</node>\n  <node name="2">2</node>\n  '
+            '<node name="3">3</node>\n</document>\n'),)
 
         self._format_each_should_equal(tests)
 
-
     def it_should_format_tuples(self):
         tests = (
-            ((1,2,3), '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document nodetype="fixed-list">\n  <i>1</i>\n  <i>2</i>\n  <i>3</i>\n</document>\n'),
+            ((1, 2, 3), '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n'
+             '<document nodetype="fixed-list">\n  <i>1</i>\n  <i>2</i>\n  '
+             '<i>3</i>\n</document>\n'),
             )
 
         self._format_each_should_equal(tests)
 
-
     def it_should_format_nested_unicode_dicts(self):
         tests = (
             ({u'foo': u'bar'},
-             '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>\n  <foo>bar</foo>\n</document>\n'),
-            ({u'foo': {u'bar': u'baz'}}, '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>\n  <foo>\n    <bar>baz</bar>\n  </foo>\n</document>\n'),
+             '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>\n  '
+             '<foo>bar</foo>\n</document>\n'),
+            ({u'foo': {u'bar': u'baz'}}, '<?xml version=\'1.0\' '
+             'encoding=\'UTF-8\'?>\n<document>\n  <foo>\n    <bar>baz</bar>'
+             '\n  </foo>\n</document>\n'),
             ({u'packages': [],
               u'terms': None,
               u'description': {
@@ -127,14 +145,13 @@ class BasicSpec(CommonBaseSpec):
 
         self._format_each_should_equal(tests)
 
-
     def it_should_format_special_characters(self):
         tests = (
-            ('< & >', '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>&lt; &amp; &gt;</document>\n'),
+            ('< & >', '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n'
+             '<document>&lt; &amp; &gt;</document>\n'),
             )
 
         self._format_each_should_equal(tests)
-
 
     def it_should_format_newlines_correctly(self):
         tests = (
@@ -170,7 +187,8 @@ long
 
 paragraph
 
-'''), '''<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document nodetype="fixed-list">
+'''), '''<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document \
+nodetype="fixed-list">
   <i>This
 
 is
@@ -190,16 +208,16 @@ paragraph
         self._format_each_should_equal(tests)
 
 
-
 class ObjectSpec(CommonBaseSpec):
 
     def it_should_format_generator_objects(self):
         tests = (
-            ((i for i in xrange(1,4)), '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document nodetype="generated-list">\n  <i>1</i>\n  <i>2</i>\n  <i>3</i>\n</document>\n'),
+            ((i for i in xrange(1,4)), '<?xml version=\'1.0\' '
+             'encoding=\'UTF-8\'?>\n<document nodetype="generated-list">\n  '
+             '<i>1</i>\n  <i>2</i>\n  <i>3</i>\n</document>\n'),
             )
 
         self._format_each_should_equal(tests)
-
 
     def it_should_format_complex_objects(self):
 
@@ -222,14 +240,14 @@ class ObjectSpec(CommonBaseSpec):
         }
 
         tests = (
-            ((1,2,3), '''<?xml version=\'1.0\' encoding=\'UTF-8\'?>
+            ((1, 2, 3), '''<?xml version=\'1.0\' encoding=\'UTF-8\'?>
 <document nodetype="fixed-list">
   <i>1</i>
   <i>2</i>
   <i>3</i>
 </document>
 '''),
-            (['foo','bar',True],
+            (['foo', 'bar', True],
              '''<?xml version=\'1.0\' encoding=\'UTF-8\'?>
 <document nodetype="list">
   <i>foo</i>
@@ -237,7 +255,7 @@ class ObjectSpec(CommonBaseSpec):
   <i nodetype="boolean">true</i>
 </document>
 '''),
-            ((i for i in [1,2,3]),
+            ((i for i in [1, 2, 3]),
              '''<?xml version=\'1.0\' encoding=\'UTF-8\'?>
 <document nodetype="generated-list">
   <i>1</i>
@@ -300,15 +318,14 @@ class ObjectSpec(CommonBaseSpec):
 
         self._format_each_should_equal(tests)
 
-
     def it_should_format_io_objects(self):
         tests = (
             ({'data': BytesIO('this is some data')},
-             "<?xml version='1.0' encoding='UTF-8'?>\n<document>\n  <data>this is some data</data>\n</document>\n"),
+             "<?xml version='1.0' encoding='UTF-8'?>\n<document>\n  "
+             "<data>this is some data</data>\n</document>\n"),
             )
 
         self._format_each_should_equal(tests)
-
 
 
 class UnsupportedFormatSpec(CommonBaseSpec):
@@ -318,13 +335,17 @@ class UnsupportedFormatSpec(CommonBaseSpec):
             'file': tempfile.TemporaryFile()
             }
 
-        self.assertRaises(TypeError, XMLEncoder(data, strict_errors=True).to_string)
+        self.assertRaises(
+            TypeError,
+            XMLEncoder(data, strict_errors=True).to_string)
 
     def it_should_skip_errors(self):
         """it should not raise on skip_errors"""
         tests = (
             ({'file': tempfile.TemporaryFile()},
-             '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>\n  <file nodetype="unsupported-type">&lt;type \'file\'&gt;</file>\n</document>\n'),
+             '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<document>\n  '
+             '<file nodetype="unsupported-type">&lt;type \'file\'&gt;</file>'
+             '\n</document>\n'),
             )
 
         self._format_each_should_equal(tests)

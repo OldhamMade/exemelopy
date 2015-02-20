@@ -18,7 +18,6 @@ __all__ = (
     )
 
 
-
 class XMLEncoder(object):
     """The main constructor method which accepts the value
     of ``data`` to be later converted to XML.
@@ -36,14 +35,19 @@ class XMLEncoder(object):
     set-up method of ``lxml.etree``.
     """
 
-    _is_uuid = re.compile(r'^\{?([0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12})\}?$', re.I)
+    _is_uuid = re.compile(
+        r'^\{?([0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}'
+        r'\-[0-9a-f]{4}\-[0-9a-f]{12})\}?$',
+        re.I
+    )
 
-    def __init__(self, data, doc_el='document', encoding='UTF-8', strict_errors=False, **params):
+    def __init__(self, data,
+                 doc_el='document', encoding='UTF-8', strict_errors=False,
+                 **params):
         self.data = data
         self.document = etree.Element(doc_el, **params)
         self.encoding = encoding
         self.strict_errors = strict_errors
-
 
     def to_string(self, indent=True, declaration=True):
         """Encodes the stored ``data`` to XML and returns a
@@ -61,23 +65,21 @@ class XMLEncoder(object):
                               pretty_print=indent
                               )
 
-
     def to_xml(self):
         """Encodes the stored ``data`` to XML and returns
         an ``lxml.etree`` value.
         """
         if self.data:
             self.document = self._update_document(self.document, self.data)
+
         return self.document
 
-
     def from_string(self, string):
-        """Parses a ``string`` value which replaces the internal ``data`` value."""
+        """Parses a ``string`` value which
+        replaces the internal ``data`` value."""
         self.document = etree.parse(BytesIO(string))
 
-
     def _update_document(self, node, data):
-
         if data is None:
             node.text = None
 
@@ -90,12 +92,12 @@ class XMLEncoder(object):
             node.text = u"false"
 
         elif isinstance(data, basestring) and \
-             len(data) in (36, 38) and \
-             self._is_uuid.match(data):
+            len(data) in (36, 38) and \
+            self._is_uuid.match(data):
 
             try:
                 UUID(data)
-            except:
+            except ValueError, AttributeError:
                 pass
             else:
                 node.set('nodetype', u'uuid')
@@ -118,23 +120,28 @@ class XMLEncoder(object):
         elif hasattr(data, 'iteritems'):
             for name, items in data.iteritems():
                 try:
-                    if isinstance(name, basestring) and name and str(name[0]) is '?':
+                    if isinstance(name, basestring) \
+                       and name and str(name[0]) is '?':
                         #  processing instruction
                         self._add_processing_instruction(node, items)
 
-                    elif isinstance(name, basestring) and name and str(name[0]) is '!':
+                    elif isinstance(name, basestring) \
+                         and name and str(name[0]) is '!':
                         # doctype
                         self._add_doctype(node, items)
 
-                    elif isinstance(name, basestring) and name and not name[0].isalpha():
-                        child = etree.SubElement(node, u'node', name=unicode(name))
+                    elif isinstance(name, basestring) \
+                         and name and not name[0].isalpha():
+                        child = etree.SubElement(node, u'node',
+                                                 name=unicode(name))
 
                     elif isinstance(name, basestring) and name:
                         child = etree.SubElement(node, unicode(name))
 
                     else:
                         # node name is invalid, use <node name="{name}">
-                        child = etree.SubElement(node, u"node", name=unicode(name))
+                        child = etree.SubElement(node, u"node",
+                                                 name=unicode(name))
 
                 except ValueError:
                     # node name is invalid, use <node name="{name}">
@@ -143,36 +150,33 @@ class XMLEncoder(object):
                 child = self._update_document(child, items)
 
         elif isinstance(data, list):
-            node.set('nodetype',u'list')
+            node.set('nodetype', u'list')
             for item in data:
                 self._update_document(
                     etree.SubElement(node, u'i'),
                     item)
 
         elif isinstance(data, set):
-            node.set('nodetype',u'unique-list')
+            node.set('nodetype', u'unique-list')
             for item in data:
                 self._update_document(
                     etree.SubElement(node, u'i'),
                     item)
-
 
         elif isinstance(data, tuple):
-            node.set('nodetype',u'fixed-list')
+            node.set('nodetype', u'fixed-list')
             for item in data:
                 self._update_document(
                     etree.SubElement(node, u'i'),
                     item)
-
 
         elif hasattr(data, 'send'):
             # generator
-            node.set('nodetype',u'generated-list')
+            node.set('nodetype', u'generated-list')
             for item in data:
                 self._update_document(
                     etree.SubElement(node, u'i'),
                     item)
-
 
         elif isinstance(data, object) \
             and hasattr(data, '__slots__'):
@@ -188,7 +192,6 @@ class XMLEncoder(object):
                 self._update_document(
                     etree.SubElement(sub, unicode(item)),
                     value)
-
 
         elif isinstance(data, object):
             try:
@@ -206,13 +209,12 @@ class XMLEncoder(object):
                         etree.SubElement(sub, unicode(item)),
                         value)
 
-            except AttributeError as e:
+            except Exception:
                 if self.strict_errors:
                     raise TypeError('%s is not XML serializable' % type(data))
 
                 node.set('nodetype', u'unsupported-type')
                 node.text = self._to_unicode(type(data))
-
 
         else:
             if self.strict_errors:
@@ -223,10 +225,8 @@ class XMLEncoder(object):
 
         return node
 
-
     def _is_scalar(self, value):
         return isinstance(value, (basestring, float, int, long))
-
 
     def _to_unicode(self, string):
         if not string and not self._is_scalar(string):
@@ -234,31 +234,20 @@ class XMLEncoder(object):
 
         return unicode(self.__escape(string))
 
-
     def _add_processing_instruction(self, node, data):
-        raise NotImplemented('creating processing instructions has not been implemented')
+        raise NotImplementedError(
+            'creating processing instructions '
+            'has not been implemented'
+        )
 
-        self.document = etree.ElementTree(self.document)
-
-        attrs = []
-
-        if type(data) is dict:
-            attrs = self.__dict_to_attrs(dict(
-                (name, value)
-                for name, value in data.iteritems()
-                if name[0].isalpha() and type(value) is not dict
-                ))
-
-        pi = etree.ProcessingInstruction(node[1:])#, ' '.join(attrs))
-
+    def _add_doctype(self):
+        raise NotImplementedError(
+            'creating doctype declarations '
+            'has not been implemented'
+        )
 
     def __dict_to_attrs(self, d):
         return ('%s="%s"' % (name, value) for name, value in d.iteritems())
-
-
-    def _add_doctype(self, *args, **kwargs):
-        raise NotImplemented('creating doctype declarations has not been implemented')
-
 
     def __escape(self, data):
         if data is None:
@@ -270,12 +259,12 @@ class XMLEncoder(object):
         if isinstance(data, str):
             try:
                 data = unicode(data, 'latin1')
-            except:
+            except Exception:
                 pass
 
         return data
 
-
     def __unicodeToHTMLEntities(self, text):
-        """Converts unicode to HTML entities.  For example '&' becomes '&amp;'."""
+        """Converts unicode to HTML entities.
+        For example '&' becomes '&amp;'."""
         return cgi.escape(text).encode('ascii', 'xmlcharrefreplace')

@@ -2,6 +2,7 @@ from unitbench import Benchmark
 
 from basic import BasicBenchmark
 
+
 def main():
     print 'Running benchmarks... please wait...'
     BasicBenchmark().run()
