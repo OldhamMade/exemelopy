@@ -129,8 +129,9 @@ class XMLEncoder(object):
                     elif (isinstance(name, basestring)
                           and name
                           and str(name[0]) is '!'):
-                        # doctype
-                        self._add_doctype(node, items)
+                        # doctypes not implemented
+                        # self._add_doctype(node, items)
+                        pass
 
                     elif (isinstance(name, basestring)
                           and name
