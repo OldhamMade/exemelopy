@@ -283,7 +283,7 @@ class ObjectSpec(CommonBaseSpec):
   <bar nodetype="boolean">false</bar>
 </document>
 '''),
-            (footest_object,
+            (test_object,
              '''<?xml version=\'1.0\' encoding=\'UTF-8\'?>
 <document>
   <PlainObject nodetype="container">
