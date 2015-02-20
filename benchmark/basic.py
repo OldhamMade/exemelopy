@@ -113,7 +113,7 @@ class BasicBenchmark(Benchmark):
 
     def bench_Large_Object(self, input_):
         data = {}
-        for _ in xrange(10):
+        for i in xrange(10):
             data[i] = {}
             for j in xrange(10):
                 data[i][j] = {

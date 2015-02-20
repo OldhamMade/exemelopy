@@ -49,7 +49,7 @@ class ComplexObject(DictMixin):
 
 
 class CommonBaseSpec(unittest.TestCase):
-    def _format_each_should_equal(self, items, skip_errors=False):
+    def _format_each_should_equal(self, items):
         for test, expected in items:
             output = XMLEncoder(test).to_string()
             self.assertEqual(output, expected)
@@ -231,9 +231,9 @@ class ObjectSpec(CommonBaseSpec):
                 }
             }
 
-        foo = PlainObject()
-        foo.bar = 'baz'
-        foo.nested = nesteddict
+        test_object = PlainObject()
+        test_object.bar = 'baz'
+        test_object.nested = nesteddict
 
         titles = {
             'long title': 'some text',
@@ -283,7 +283,7 @@ class ObjectSpec(CommonBaseSpec):
   <bar nodetype="boolean">false</bar>
 </document>
 '''),
-            (foo,
+            (footest_object,
              '''<?xml version=\'1.0\' encoding=\'UTF-8\'?>
 <document>
   <PlainObject nodetype="container">

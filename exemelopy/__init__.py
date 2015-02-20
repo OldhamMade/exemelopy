@@ -97,7 +97,7 @@ class XMLEncoder(object):
 
             try:
                 UUID(data)
-            except ValueError, AttributeError:
+            except (ValueError, AttributeError):
                 pass
             else:
                 node.set('nodetype', u'uuid')
